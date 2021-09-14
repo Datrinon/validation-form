@@ -13,7 +13,7 @@ export default class Form {
   form;
   /**
    * The inputs given to the form, arranged in order of addition. 
-   * @type {{id : {defaultClass : element}}[]}
+   * @type {{id : {element : HTMLelement, type : type}}[]}
    */
   inputs;
 
@@ -77,4 +77,57 @@ export default class Form {
       dataList.append(option);
     });
   }
+
+  /**
+   * Create an options list and add it to the form.
+   * 
+   * @param {string} title - The title provided to the legend.
+   * @param {string} isRadio - if true, then make a radio option list, else checkboxes.
+   * @param { {id : string,
+   *           value : string,
+   *           selected : bool}[], } options 
+   * The selections available on the options list.
+   * id refers to the id that should be assigned the input. value refers to its textual
+   * presentation.
+   * @param {string} name - The name of the options list.
+   * @param {boolean} required - Does the user need to answer the options list?
+   */
+  addOptionsListToForm(title, isRadio, options, name, required) {
+    const type = isRadio ? 'radio' : 'checkbox';
+    const fieldset = document.createElement("fieldset");
+    const legend = document.createElement("legend");
+
+    legend.textContent = title;
+    fieldset.append(legend);
+
+    options.forEach(selection => {
+      let container = document.createElement("div");
+      let input = document.createElement("input");
+      let label = document.createElement("label");
+
+      input.setAttribute("type", type);
+      input.id = selection.id;
+      input.setAttribute("name", name);
+      if (Number(selection.default) === 1) {
+        input.setAttribute("checked", true);
+      }
+
+      label.setAttribute("for", input.id);
+      label.textContent = selection.value;  
+
+      container.append(input, label);
+      fieldset.append(container);
+    });
+    
+    // to make an options list required, you just need to set required on one field.
+    // https://stackoverflow.com/a/8287947/14146474
+    if (required) {
+      fieldset.querySelector("div input").setAttribute("required", "true");
+    }
+
+    this.inputs[name] = { element: fieldset, type: type };
+
+    this.form.append(fieldset);
+  }
+  
 }

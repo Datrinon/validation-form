@@ -1,5 +1,6 @@
 // data
 import Countries from './data/countries.txt';
+import Plans from './data/plans.csv';
 // css
 import './index.css'
 // js
@@ -16,14 +17,19 @@ const countries = Countries.split("\r\n");
   container.append(c.heading("Sign-Up", 1));
 
   signUpForm.addInputToForm("email", "Email", "email", true, "email-field");
-  
+
   signUpForm.addInputToForm("text", "Country", "country", true, "country-field");
   signUpForm.attachDatalist("countries", countries, "country");
   
   signUpForm.addInputToForm("text", "ZIP Code", "zip", true);
+
+  signUpForm.addOptionsListToForm("Select a Plan", true, Plans, "plan", true);
+
   signUpForm.addInputToForm("password", "Password", "password", true);
   signUpForm.addInputToForm("password", "Confirm Password", "confirm-password", true);
+
 
   container.append(signUpForm.form);
   document.body.append(container);
 }());
+
