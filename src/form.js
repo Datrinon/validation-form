@@ -2,7 +2,9 @@ import Utility from "./utility";
 
 /**
  * A class for creating form elements with custom validation
-* techniques, utilizing the Constraint Validation API.
+* techniques, utilizing the Constraint Validation API. Every input that 
+* you give to form is tracked in the inputs field, do use this to assign
+* validation to the element with the method attachValidation().
  */
 export default class Form {
   
@@ -12,6 +14,10 @@ export default class Form {
    */
   form;
   /**
+   * Contains the form's contents as a ul element.
+   */
+  #formContents;
+  /**
    * The inputs given to the form, arranged in order of addition. 
    * @type {{id : {element : HTMLelement, type : type}}[]}
    */
@@ -19,9 +25,9 @@ export default class Form {
 
   constructor(className) {
     this.form = Utility.createElement("form", className);
-    let ul = document.createElement("ul");
+    this.#formContents = document.createElement("ul");
     
-    this.form.append(ul);
+    this.form.append(this.#formContents);
 
     this.inputs = {};
   }
@@ -49,11 +55,11 @@ export default class Form {
     input.id = id;
     input.name = id;
 
-    container.append(labelView, input, document.createElement("span"));
+    container.append(labelView, input, Utility.createElement("span", "error"));
     
     this.inputs[id] = { element: container, type : type };
 
-    this.form.append(this.inputs[id].element);
+    this.#formContents.append(this.inputs[id].element);
   }
 
   /**
@@ -65,9 +71,10 @@ export default class Form {
    */
   attachDatalist(listId, list, inputId) {
     const dataList = document.createElement("datalist");
-    this.form.querySelector(`#${inputId}`).setAttribute("list", listId);
-    this.form.querySelector(`#${inputId}`)
-        .insertAdjacentElement("afterend", dataList);
+    const inputField = this.form.querySelector(`#${inputId}`);
+    
+    inputField.setAttribute("list", listId);
+    inputField.insertAdjacentElement("afterend", dataList);
 
     dataList.id = listId;
 
@@ -76,6 +83,8 @@ export default class Form {
       option.textContent = entry;
       dataList.append(option);
     });
+
+    this.#addDatalistValidation(inputField, list);
   }
 
   /**
@@ -85,7 +94,7 @@ export default class Form {
    * @param {string} isRadio - if true, then make a radio option list, else checkboxes.
    * @param { {id : string,
    *           value : string,
-   *           selected : bool}[], } options 
+   *           selected : bool}[]} options 
    * The selections available on the options list.
    * id refers to the id that should be assigned the input. value refers to its textual
    * presentation.
@@ -93,6 +102,7 @@ export default class Form {
    * @param {boolean} required - Does the user need to answer the options list?
    */
   addOptionsListToForm(title, isRadio, options, name, required) {
+    const container = document.createElement("li");
     const type = isRadio ? 'radio' : 'checkbox';
     const fieldset = document.createElement("fieldset");
     const legend = document.createElement("legend");
@@ -127,7 +137,50 @@ export default class Form {
 
     this.inputs[name] = { element: fieldset, type: type };
 
-    this.form.append(fieldset);
+    container.append(fieldset);
+    this.#formContents.append(container);
   }
   
+  /**
+   * Add submit and cancel buttons to the form.
+   * @param {string} confirmMsg - Message to display on the confirm.
+   * @param {string} cancelMsg - Message to display on cancel.
+   */
+  addSubmitCancelButtons(confirmMsg, cancelMsg) {
+    let submitButton = Utility.createElement("button", "form-submit");
+    let cancelButton = Utility.createElement("button", "form-cancel");
+
+    submitButton.textContent = confirmMsg;
+    cancelButton.textContent = cancelMsg;
+
+    submitButton.setAttribute("type", "submit");
+    cancelButton.setAttribute("type", "button");
+    
+    this.#formContents.append(submitButton, cancelButton);
+  }
+
+  /**
+   * Adds basic validation for inputs with datalists. Meaning, the given input
+   * matches an entry in the list.
+   * 
+   * @param input {HTMLElement} - An input element with an attached datalist.
+   * @param datalist {string[]} - String array representing the list of options.
+   */
+  #addDatalistValidation(input, datalist) {
+    const error = input.parentNode.querySelector(".error");
+
+    input.addEventListener("focusout", () => {
+      let userInput = input.value.toLowerCase();
+      let found = datalist.findIndex(country => country.toLowerCase() === userInput);
+      if (found === -1) {
+        // keep this here to catch bad submissions.
+        input.setCustomValidity("Not a valid country.");
+        error.classList.add("active");
+        error.textContent = "Not a valid country.";
+      } else {
+        error.textContent = "";
+        error.classList.remove("active");
+      } 
+    });      
+  }
 }

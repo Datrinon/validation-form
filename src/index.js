@@ -28,6 +28,7 @@ const countries = Countries.split("\r\n");
   signUpForm.addInputToForm("password", "Password", "password", true);
   signUpForm.addInputToForm("password", "Confirm Password", "confirm-password", true);
 
+  signUpForm.addSubmitCancelButtons("Sign Up", "Go Back");
 
   container.append(signUpForm.form);
   document.body.append(container);
