@@ -2,7 +2,7 @@ import Utility from "./utility";
 
 /**
  * A class for creating form elements with custom validation
- * techniques, utilizing the Constraint Validation API.
+* techniques, utilizing the Constraint Validation API.
  */
 export default class Form {
   
@@ -13,7 +13,7 @@ export default class Form {
   form;
   /**
    * The inputs given to the form, arranged in order of addition. 
-   * @type {{defaultClass : element}[]}
+   * @type {{id : {defaultClass : element}}[]}
    */
   inputs;
 
@@ -22,6 +22,8 @@ export default class Form {
     let ul = document.createElement("ul");
     
     this.form.append(ul);
+
+    this.inputs = {};
   }
 
   /**
@@ -29,31 +31,50 @@ export default class Form {
    * can be obtained through the inputs object field.
    * 
    * @param {string} type - The type of input to add into the form.
-   * @param {string} label - The label to advise what sort of input is needed.
+   * @param {string} labelText - The label to advise what sort of input is needed.
    * @param {string} id - The id to refer to the input by; label will use this in "for=".
+   * @param {boolean} required - Whether or not the input should be required.
    * @param {string} classNames - Any additional class names assigned to the input.
    */
-  addInputToForm(type="text", label, id, ...classNames) {
-    const container = document.createElement("ul");
+  addInputToForm(type="text", labelText, id, required, ...classNames) {
+    const container = document.createElement("li");
     
-    const labelElem = document.createElement("label");
-    labelElem.setAttribute("for", id);
-    labelElem.textContent = label;
+    const labelView = document.createElement("label");
+    labelView.setAttribute("for", id);
+    labelView.textContent = labelText;
 
     const input = Utility.createElement("input", "form-input", ...classNames);
     input.setAttribute("type", type);
+    input.setAttribute("required", required);
     input.id = id;
     input.name = id;
 
-    container.append(labelElem, input, document.createElement("span"));
+    container.append(labelView, input, document.createElement("span"));
     
-    const inputInfo = {
-      id: id,
-      elem: container,
-      type: type,
-    };
+    this.inputs[id] = { element: container, type : type };
 
-    this.inputs.push(inputInfo);
-    this.form.append(inputInfo.elem);
+    this.form.append(this.inputs[id].element);
+  }
+
+  /**
+   * Attach a datalist element to an input. Appends it to the input.
+   * 
+   * @param {string} listId - The name of the list.
+   * @param {string[]} list - A list of options to attach to the input.
+   * @param {*} inputId - the ID of the input to attach the datalist to.
+   */
+  attachDatalist(listId, list, inputId) {
+    const dataList = document.createElement("datalist");
+    this.form.querySelector(`#${inputId}`).setAttribute("list", listId);
+    this.form.querySelector(`#${inputId}`)
+        .insertAdjacentElement("afterend", dataList);
+
+    dataList.id = listId;
+
+    list.forEach(entry => {
+      let option = document.createElement("option");
+      option.textContent = entry;
+      dataList.append(option);
+    });
   }
 }
