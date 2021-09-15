@@ -24,7 +24,7 @@ export default class Form {
   inputs;
 
   constructor(className) {
-    this.form = Utility.createElement("form", className);
+    this.form = Utility.createElement("form", "form", className);
     this.#formContents = document.createElement("ul");
     
     this.form.append(this.#formContents);
@@ -173,14 +173,20 @@ export default class Form {
 
     input.addEventListener("focusout", () => {
       let userInput = input.value.toLowerCase();
+      if (userInput === "") {
+        return;
+      }
+
       let found = datalist.findIndex(country => country.toLowerCase() === userInput);
       if (found === -1) {
         // keep this here to catch bad submissions.
         input.setCustomValidity(`Not a valid ${input.name}.`);
         error.classList.add("active");
+        input.classList.add("error-active");
         error.textContent = `Not a valid ${input.name}.`;
       } else {
         error.textContent = "";
+        input.classList.remove("error-active");
         error.classList.remove("active");
       } 
     });      
@@ -232,7 +238,7 @@ export default class Form {
    * pwRequirements.csv.
    */
   static addPasswordValidation(e) {
-    let isValidPw = false;
+    let isValidPw = true;
     const password = e.currentTarget.value;
     const successClass = "req-met";
     const annotations = Array
@@ -248,7 +254,6 @@ export default class Form {
     }
 
     const requirementsMet = (annotationElement) => {
-      isValidPw = true;
       annotationElement.classList.add(successClass);
     }
 
@@ -306,10 +311,12 @@ export default class Form {
       if (confirmPwField.value !== "" 
           && pwField.value !== confirmPwField.value) {
         confirmPwField.setCustomValidity(msg);
+        pwField.classList.add("active-error");
         errorElement.classList.add("active");
         errorElement.textContent = msg;
       } else {
         confirmPwField.setCustomValidity("");
+        pwField.classList.remove("active-error");
         errorElement.classList.remove("active");
         errorElement.textContent = "";
       }
@@ -328,12 +335,15 @@ export default class Form {
     const errorElement = emailField.parentNode.querySelector(".error");
 
     emailField.addEventListener("focusout", () => {
-      if (emailField.value.match(Utility.emailRegex) === null) {
+      if (emailField.value !== "" &&
+          emailField.value.match(Utility.emailRegex) === null) {
         emailField.setCustomValidity(msg);
+        emailField.classList.add("active-error");
         errorElement.classList.add("active");
         errorElement.textContent = msg;
       } else {
         emailField.setCustomValidity("");
+        emailField.classList.remove("active-error");
         errorElement.classList.remove("active");
         errorElement.textContent = "";
       }

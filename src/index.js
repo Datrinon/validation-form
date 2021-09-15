@@ -4,6 +4,7 @@ import Plans from './data/plans.csv';
 import PWRequirements from './data/pwRequirements.csv';
 // css
 import './index.css';
+import './form.css';
 // js
 import Form from './form';
 import Component from './component';
@@ -15,7 +16,7 @@ const countries = Countries.split("\r\n");
   const signUpForm = new Form("sign-up-form");
 
   const container = c.div("sign-up");
-  container.append(c.heading("Sign-Up", 1));
+  container.append(c.heading("Sign Up", 1));
 
   signUpForm.addInputToForm("email", "Email", "email", true, "", "email-field");
   Form.addEmailValidation(signUpForm.form, "email");

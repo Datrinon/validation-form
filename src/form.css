@@ -1,0 +1,121 @@
+.form {
+  min-width: 300px;
+  width: 60vw;
+  max-width: 600px;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin: 0 auto;
+  padding: 25px;
+  box-shadow: 5px 5px 15px darkgrey;
+}
+
+.form > ul {
+  all: unset;
+}
+
+.form > ul > li {
+  margin: 15px 0;
+}
+
+.form ul li > label, legend {
+  text-transform: lowercase;
+  font-variant: small-caps;
+  font-size: 125%;
+}
+
+.form li {
+  list-style-type: none;
+}
+
+.form-input {
+  all: unset;
+  height: 1.5rem;
+  width: 100%;
+  border: 1px solid transparent;
+  background-color: rgb(225, 225, 225);
+  border-radius: 5px;
+  font-family: inherit;
+  padding: 2px;
+}
+
+.form-input:hover {
+  background-color: white;
+  border: 1px solid grey;
+}
+
+.form-input:focus {
+  background-color: white;
+  border: 1px solid grey;
+}
+
+.form li>label {
+  display: block;
+}
+
+fieldset {
+  all: unset;
+  border: none;
+}
+
+.form li > ul {
+  border: 1px solid rgb(225, 225, 225);
+  border-top: 0px;
+  padding: 10px 0 5px 0;
+  width: 100.8%;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  position: relative;
+  bottom: 3px;
+  line-height: 1.05rem;
+}
+
+.form ul li ul {
+  position: relative;
+}
+
+.form ul li ul li {
+  position: relative;
+  left: 15px;
+  color: grey;
+  font-size: 85%;
+}
+
+.form ul li ul li.req-met {
+  color: green;
+}
+
+.req-met:before{
+  content: "✔";
+  position: absolute;
+  left: -15px;
+  bottom: 0px;
+}
+
+.error.active {
+  color: red;
+}
+
+.form-submit, .form-cancel {
+  height: 250%;
+  border: 1px solid rgb(225, 225, 225);
+  border-radius: 5px;
+  padding: 5px;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.form-submit:hover, .form-cancel:hover {
+  border: 1px solid blue;
+}
+
+.form-submit {
+  border: 1px solid lightcyan;
+  background-color: lightblue;
+  margin-right: 25px;
+}
+
+fieldset div {
+  position: relative;
+  left: 5px;
+  margin: 5px 0;
+}

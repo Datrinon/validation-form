@@ -1,14 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap');
 
-.req-met {
-  color: green;
+body {
+  font-family: 'Josefin Sans';
 }
 
-.req-met:after{
-  content: "✔";
-  position: absolute;
-  right: 0px;
+h1 {
+  text-align: center;
 }
 
-.error.active {
-  color: red;
+.sign-up {
+  margin: 25px;
 }
