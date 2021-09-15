@@ -31,6 +31,7 @@ const countries = Countries.split("\r\n");
   signUpForm.attachAnnotation("password", PWRequirements);
 
   signUpForm.addInputToForm("password", "Confirm Password", "confirm-password", true);
+  Form.confirmPasswordMatch(signUpForm.form, "password", "confirm-password");
 
   signUpForm.addSubmitCancelButtons("Sign Up", "Go Back");
 

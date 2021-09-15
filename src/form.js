@@ -288,4 +288,31 @@ export default class Form {
       e.currentTarget.setCustomValidity("");
     }
   }
+
+  /**
+   * A built-in method which ensures that password and confirm password matches.
+   * If the confirm password does not match the password field, the span element
+   * inside of the confirm password field will enable the active class. That is,
+   *  as long as "confirm password" is not empty.
+   * @param pwId {string} - The ID of the password input field.
+   * @param confirmPwId {string} - The ID of the confirm password input field.
+   */
+  static confirmPasswordMatch(form, pwId, confirmPwId, msg="Passwords do not match.") {
+    const pwField = form.querySelector(`#${pwId}`);
+    const confirmPwField = form.querySelector(`#${confirmPwId}`);
+    const errorField = confirmPwField.parentNode.querySelector(".error");
+
+    confirmPwField.addEventListener("focusout", () => {
+      if (confirmPwField.value !== "" 
+          && pwField.value !== confirmPwField.value) {
+        confirmPwField.setCustomValidity(msg);
+        errorField.classList.add("active");
+        errorField.textContent = msg;
+      } else {
+        confirmPwField.setCustomValidity("");
+        errorField.classList.remove("active");
+        errorField.textContent = "";
+      }
+    });
+  }
 }
