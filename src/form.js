@@ -40,9 +40,10 @@ export default class Form {
    * @param {string} labelText - The label to advise what sort of input is needed.
    * @param {string} id - The id to refer to the input by; label will use this in "for=".
    * @param {boolean} required - Whether or not the input should be required.
+   * @param {string} placeholder - The placeholder string to display in the field.
    * @param {string} classNames - Any additional class names assigned to the input.
    */
-  addInputToForm(type="text", labelText, id, required, ...classNames) {
+  addInputToForm(type="text", labelText, id, required, placeholder="", ...classNames) {
     const container = document.createElement("li");
     
     const labelView = document.createElement("label");
@@ -54,6 +55,7 @@ export default class Form {
     input.setAttribute("required", required);
     input.id = id;
     input.name = id;
+    input.setAttribute("placeholder", placeholder);
 
     container.append(labelView, input, Utility.createElement("span", "error"));
     
@@ -183,4 +185,44 @@ export default class Form {
       } 
     });      
   }
+
+  /**
+   * Add custom validation to a form input through the use of a callback.
+   * The callback will be invoked each time the user moves out of focus of the
+   * element.
+   * @param {*} input 
+   */
+  addValidation(input, callback) {
+
+  }
+
+  /**
+   * Attach an annotation message below an input field. You can pass in multiple
+   * messages; each element in the message block will be turned into a separate
+   * p element.
+   * @param {HTMLElement} inputId - The ID of the input to attach to.
+   * @param {{string : string}[]} messages - The messages to include in the annotation.
+   * Provide as a key-value pair, with the key being the class name for the element,
+   * and the content being the message to show. 
+   */
+  attachAnnotation(inputId, ...messages) {
+    const input = this.form.querySelector(`#${inputId}`);
+    const container = Utility.createElement("ul", `${inputId}-annotations`);
+    // convert messages into a 1D array.
+    messages = messages.reduce((messages, message) => {
+      return messages.concat(message);
+    }, []);
+
+    messages.forEach((msg) => {
+      let note = document.createElement("li");
+      note.className = msg.className;
+      note.textContent = msg.textContent;
+
+      container.append(note);
+    });
+
+    input.parentNode.append(container);
+  }
+
+
 }
