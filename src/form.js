@@ -297,21 +297,45 @@ export default class Form {
    * @param pwId {string} - The ID of the password input field.
    * @param confirmPwId {string} - The ID of the confirm password input field.
    */
-  static confirmPasswordMatch(form, pwId, confirmPwId, msg="Passwords do not match.") {
+  static addPasswordMatchValidation(form, pwId, confirmPwId, msg="Passwords do not match.") {
     const pwField = form.querySelector(`#${pwId}`);
     const confirmPwField = form.querySelector(`#${confirmPwId}`);
-    const errorField = confirmPwField.parentNode.querySelector(".error");
+    const errorElement = confirmPwField.parentNode.querySelector(".error");
 
     confirmPwField.addEventListener("focusout", () => {
       if (confirmPwField.value !== "" 
           && pwField.value !== confirmPwField.value) {
         confirmPwField.setCustomValidity(msg);
-        errorField.classList.add("active");
-        errorField.textContent = msg;
+        errorElement.classList.add("active");
+        errorElement.textContent = msg;
       } else {
         confirmPwField.setCustomValidity("");
-        errorField.classList.remove("active");
-        errorField.textContent = "";
+        errorElement.classList.remove("active");
+        errorElement.textContent = "";
+      }
+    });
+  }
+
+  /**
+   * Ensures an entered email is actually valid. Part of the provided validations 
+   * of the form class.
+   * @param {*} form 
+   * @param {*} emailId 
+   * @param {*} msg 
+   */
+  static addEmailValidation(form, emailId, msg="Please enter a valid email.") {
+    const emailField = form.querySelector(`#${emailId}`);
+    const errorElement = emailField.parentNode.querySelector(".error");
+
+    emailField.addEventListener("focusout", () => {
+      if (emailField.value.match(Utility.emailRegex) === null) {
+        emailField.setCustomValidity(msg);
+        errorElement.classList.add("active");
+        errorElement.textContent = msg;
+      } else {
+        emailField.setCustomValidity("");
+        errorElement.classList.remove("active");
+        errorElement.textContent = "";
       }
     });
   }

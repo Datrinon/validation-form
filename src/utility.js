@@ -3,6 +3,9 @@
  */
 export default class Utility {
   
+  static emailRegex =  	
+  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   /**
    * Based on webpack's require to quickly import in all images in a folder.
    * See documentation https://www.npmjs.com/package/require-context to understand

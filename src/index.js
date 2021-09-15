@@ -18,6 +18,7 @@ const countries = Countries.split("\r\n");
   container.append(c.heading("Sign-Up", 1));
 
   signUpForm.addInputToForm("email", "Email", "email", true, "", "email-field");
+  Form.addEmailValidation(signUpForm.form, "email");
 
   signUpForm.addInputToForm("text", "Country", "country", true, "", "country-field");
   signUpForm.attachDatalist("countries", countries, "country");
@@ -31,7 +32,7 @@ const countries = Countries.split("\r\n");
   signUpForm.attachAnnotation("password", PWRequirements);
 
   signUpForm.addInputToForm("password", "Confirm Password", "confirm-password", true);
-  Form.confirmPasswordMatch(signUpForm.form, "password", "confirm-password");
+  Form.addPasswordMatchValidation(signUpForm.form, "password", "confirm-password");
 
   signUpForm.addSubmitCancelButtons("Sign Up", "Go Back");
 
