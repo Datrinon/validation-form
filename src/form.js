@@ -176,9 +176,9 @@ export default class Form {
       let found = datalist.findIndex(country => country.toLowerCase() === userInput);
       if (found === -1) {
         // keep this here to catch bad submissions.
-        input.setCustomValidity("Not a valid country.");
+        input.setCustomValidity(`Not a valid ${input.name}.`);
         error.classList.add("active");
-        error.textContent = "Not a valid country.";
+        error.textContent = `Not a valid ${input.name}.`;
       } else {
         error.textContent = "";
         error.classList.remove("active");
@@ -190,10 +190,13 @@ export default class Form {
    * Add custom validation to a form input through the use of a callback.
    * The callback will be invoked each time the user moves out of focus of the
    * element.
-   * @param {*} input 
+   * @param {string} inputId - The id of the input to attach the validation to.
+   * @param {function} callback - Callback to invoke to check for validation.
+   * @param {string} event - The sort of event that causes the validation to be invoked.
    */
-  addValidation(input, callback) {
-
+  attachValidation(inputId, callback, event="focusout") {
+    const input = this.form.querySelector(`#${inputId}`);
+    input.addEventListener(event, callback);
   }
 
   /**
@@ -224,5 +227,65 @@ export default class Form {
     input.parentNode.append(container);
   }
 
+  /**
+   * A built-in method for checking password validation. Use this with 
+   * pwRequirements.csv.
+   */
+  static addPasswordValidation(e) {
+    let isValidPw = false;
+    const password = e.currentTarget.value;
+    const successClass = "req-met";
+    const annotations = Array
+        .from(document.querySelectorAll(".password-annotations > *"))
+        .reduce((annotations, element) => {
+          annotations[element.classList.item(0)] = element;
+          return annotations;
+        }, {});
 
+    const requirementsNotMet = (annotationElement) => {
+      isValidPw = false;
+      annotationElement.classList.remove(successClass);
+    }
+
+    const requirementsMet = (annotationElement) => {
+      isValidPw = true;
+      annotationElement.classList.add(successClass);
+    }
+
+    if (password.length < 8) {
+      requirementsNotMet(annotations.length);
+    } else {
+      requirementsMet(annotations.length);
+    }
+
+    if (password.match(/[0-9]/) === null) {
+      requirementsNotMet(annotations.digit);
+    } else {
+      requirementsMet(annotations.digit);
+    }
+
+    if (password.match(/[A-Z]/) === null) {
+      requirementsNotMet(annotations.uppercase);
+    } else {
+      requirementsMet(annotations.uppercase);
+    }
+
+    if (password.match(/[a-z]/) === null) {
+      requirementsNotMet(annotations.lowercase);
+    } else {
+      requirementsMet(annotations.lowercase);
+    }
+
+    if (password.match(/\W/) === null) {
+      requirementsNotMet(annotations.special);
+    } else {
+      requirementsMet(annotations.special);
+    }
+
+    if (!isValidPw) {
+      e.currentTarget.setCustomValidity("Please ensure your password meets all requirements.");
+    } else {
+      e.currentTarget.setCustomValidity("");
+    }
+  }
 }

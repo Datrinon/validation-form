@@ -1,5 +1,5 @@
 className,textContent
-length,Passwords must have 7 characters.
+length,Passwords must have 8 characters.
 digit,Passwords must contain 1 digit.
 uppercase,Passwords must contain 1 uppercase letter.
 lowercase,Passwords must contain 1 lowercase letter.

@@ -1,4 +1,13 @@
 
+.req-met {
+  color: green;
+}
+
+.req-met:after{
+  content: "✔";
+  position: absolute;
+  right: 0px;
+}
 
 .error.active {
   color: red;

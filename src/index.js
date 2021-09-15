@@ -27,6 +27,7 @@ const countries = Countries.split("\r\n");
   signUpForm.addOptionsListToForm("Select a Plan", true, Plans, "plan", true);
 
   signUpForm.addInputToForm("password", "Password", "password", true);
+  signUpForm.attachValidation("password", Form.addPasswordValidation, "input")
   signUpForm.attachAnnotation("password", PWRequirements);
 
   signUpForm.addInputToForm("password", "Confirm Password", "confirm-password", true);
